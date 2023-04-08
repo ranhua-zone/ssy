@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>经纬度转换工具</title>
+</head>
+<body>
+  <h1>经纬度转换工具</h1>
+  <p>请输入经纬度坐标串：</p>
+  <textarea id="coordinate-input" rows="10" cols="50"></textarea>
+  <br>
+  <button onclick="convertCoordinates()">转换</button>
+  <button onclick="copyToClipboard()">复制</button>
+  <br>
+  <p>转换结果：</p>
+  <textarea id="coordinate-output" rows="10" cols="50" readonly></textarea>
+  <script>
+    function convertCoordinates() {
+      const input = document.getElementById('coordinate-input').value.trim();
+      const coordinates = input.split(';');
+      let output = '';
+      for (let i = 0; i < coordinates.length; i++) {
+        const coordinate = coordinates[i].split(',');
+        if (coordinate.length !== 2) {
+          continue;
+        }
+        const longitude = parseFloat(coordinate[0].match(/\d+(\.\d+)?/)[0]) / 1000000;
+        const latitude = parseFloat(coordinate[1].match(/\d+(\.\d+)?/)[0]) / 1000000;
+        output += longitude.toFixed(6) + ',' + latitude.toFixed(6);
+        if (i < coordinates.length - 1) {
+          output += ';';
+        }
+      }
+      document.getElementById('coordinate-output').value = output;
+    }
+
+    async function copyToClipboard() {
+      try {
+        await navigator.clipboard.writeText(document.getElementById('coordinate-output').value);
+        alert('复制成功！');
+      } catch (error) {
+        console.error(error);
+        alert('复制失败：' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
