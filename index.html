@@ -1,48 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>经纬度转换工具</title>
+	<meta charset="UTF-8">
+	<title>经纬度转换工具</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			background-color: #f2f2f2;
+			padding: 1rem;
+			min-height: 100vh;
+			text-align: center;
+			line-height: 1.5;
+		}
+
+		h1 {
+			margin-bottom: 2rem;
+			font-size: 2.5rem;
+			font-weight: bold;
+		}
+
+		p {
+			margin: 0.5rem 0;
+			font-size: 1.2rem;
+			font-weight: bold;
+		}
+
+		label {
+		  	display: block;
+		  	margin-top: 1rem;
+		  	font-size: 1.1rem;
+		  	font-weight: bold;
+		}
+
+		textarea {
+			min-height: 10rem;
+			max-width: 95%;
+			font-size: 1.1rem;
+			padding: 0.5rem;
+			border: 2px solid #ccc;
+			border-radius: 5px;
+			background-color: #fff;
+			margin: 0.5rem 0;
+			overflow: auto;
+			resize: none;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: #fff;
+			padding: 0.5rem 1rem;
+			border: none;
+			border-radius: 5px;
+			font-size: 1.1rem;
+			cursor: pointer;
+			margin: 0.5rem 0;
+		}
+
+		button:hover {
+			opacity: 0.8;
+		}
+
+		#coordinate-input, #coordinate-output {
+			margin-bottom: 0.5rem;
+		}      
+
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			margin: 0.5rem 0;
+		}
+
+		.col {
+			flex: 0 0 auto;
+			margin: 0 0.5rem;
+		}
+
+		@media only screen and (max-width: 600px) {
+			h1 {
+				font-size: 2rem;
+			}
+
+			p {
+				font-size: 1rem;
+			}
+
+			label {
+			  	font-size: 1rem;
+			}
+
+			textarea {
+				font-size: 1rem;
+			}
+
+			button {
+				font-size: 1rem;
+			}
+		}
+	</style>
 </head>
 <body>
-  <h1>经纬度转换工具</h1>
-  <p>请输入经纬度坐标串：</p>
-  <textarea id="coordinate-input" rows="10" cols="50"></textarea>
-  <br>
-  <button onclick="convertCoordinates()">转换</button>
-  <button onclick="copyToClipboard()">复制</button>
-  <br>
-  <p>转换结果：</p>
-  <textarea id="coordinate-output" rows="10" cols="50" readonly></textarea>
-  <script>
-    function convertCoordinates() {
-      const input = document.getElementById('coordinate-input').value.trim();
-      const coordinates = input.split(';');
-      let output = '';
-      for (let i = 0; i < coordinates.length; i++) {
-        const coordinate = coordinates[i].split(',');
-        if (coordinate.length !== 2) {
-          continue;
-        }
-        const longitude = parseFloat(coordinate[0].match(/\d+(\.\d+)?/)[0]) / 1000000;
-        const latitude = parseFloat(coordinate[1].match(/\d+(\.\d+)?/)[0]) / 1000000;
-        output += longitude.toFixed(6) + ',' + latitude.toFixed(6);
-        if (i < coordinates.length - 1) {
-          output += ';';
-        }
-      }
-      document.getElementById('coordinate-output').value = output;
-    }
+	<h1>经纬度转换工具</h1>
+	<div class="row">
+		<div class="col">
+			<form>
+				<label for="coordinate-input">请输入以英文分号分隔的经纬度坐标串：</label>
+				<textarea id="coordinate-input" name="coordinate-input"></textarea>
+				<button type="button" onclick="convertCoordinates()">转换</button>
+			</form>
+		</div>
+		<div class="col">
+			<label for="coordinate-output">转换结果：</label>
+			<textarea id="coordinate-output" name="coordinate-output" readonly></textarea>
+			<button type="button" onclick="copyToClipboard()">复制</button>
+		</div>
+	</div>
+	<script>
+		function convertCoordinates() {
+	  		const input = document.getElementById('coordinate-input').value.trim();
+	  		const coordinates = input.split(';');
+	  		let output = '';
+	  		for (let i = 0; i < coordinates.length; i++) {
+	    		const coordinate = coordinates[i].split(',');
+	    		if (coordinate.length !== 2) {
+	      			continue;
+	    		}
+	   			const longitude = parseFloat(coordinate[0].match(/\d+(\.\d+)?/)[0]) / 1000000;
+	    		const latitude = parseFloat(coordinate[1].match(/\d+(\.\d+)?/)[0]) / 1000000;
+	    		output += longitude.toFixed(6) + ',' + latitude.toFixed(6);
+	    		if (i < coordinates.length - 1) {
+	      			output += ';';
+	    		}
+	  		}
+	  		document.getElementById('coordinate-output').value = output;
+		}
 
-    async function copyToClipboard() {
-      try {
-        await navigator.clipboard.writeText(document.getElementById('coordinate-output').value);
-        alert('复制成功！');
-      } catch (error) {
-        console.error(error);
-        alert('复制失败：' + error.message);
-      }
-    }
-  </script>
+		async function copyToClipboard() {
+			try {
+				await navigator.clipboard.writeText(document.getElementById('coordinate-output').value);
+				alert('复制成功！');
+			} catch (error) {
+				console.error(error);
+				alert('复制失败：' + error.message);
+			}
+		}
+	</script>
 </body>
 </html>
